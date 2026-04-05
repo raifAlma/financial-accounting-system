@@ -1,0 +1,13 @@
+app:
+  name: "Course APP"
+  host: "0.0.0.0"
+  port: 8000
+  secret_key: "raif2008"
+  debug: true
+
+database:
+  user: 'user'
+  password: 'password'
+  host: 'localhost'
+  port: 5433
+  name: 'FinanceSystem'

@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: FinancialSystem
+    env_file:
+      - ../financial-system/.env
+    ports:
+      - "5433:5432"                        # host:container → снаружи 5433, внутри стандартный 5432
+    volumes:
+      - db_data:/var/lib/postgresql/data   # ПЕРСИСТЕНТНЫЕ ДАННЫЕ БД
+      - ./init:/docker-entrypoint-initdb.d # (опционально) скрипты первого запуска
+
+volumes:
+  db_data:
