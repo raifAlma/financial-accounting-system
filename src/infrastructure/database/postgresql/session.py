@@ -1,11 +1,11 @@
 from typing import AsyncIterator
 
-from container import Container
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends
-from infrastructure.database.postgresql.session_manager import \
-    DatabaseSessionManager
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from container import Container
+from infrastructure.database.postgresql.session_manager import DatabaseSessionManager
 
 
 @inject

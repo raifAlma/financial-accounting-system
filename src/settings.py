@@ -4,7 +4,6 @@ import yaml
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings
 
-
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -27,7 +26,7 @@ class _DatabaseSettings(BaseSettings):
     password: SecretStr
     host: str = "localhost"
     port: int = 5433
-    name: str = "postgres"
+    name: str = "financial_db"
 
     def get_database_url(self):
         return f"postgresql+asyncpg://{self.user}:{self.password.get_secret_value()}@{self.host}:{self.port}/{self.name}"

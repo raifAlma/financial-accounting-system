@@ -10,4 +10,4 @@ database:
   password: 'password'
   host: 'localhost'
   port: 5433
-  name: 'FinanceSystem'
+  name: 'financial_db'
