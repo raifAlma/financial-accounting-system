@@ -13,6 +13,7 @@ from usecases.token.refresh_token.abstract import AbstractRefreshTokenUseCase
 from .dependencies import create_token_use_case, refresh_token_use_case
 from .schemas import RefreshTokenSchema, TokenSchema, UserLoginSchema
 
+
 router = APIRouter(prefix="/auth")
 
 

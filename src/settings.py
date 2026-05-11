@@ -4,6 +4,7 @@ import yaml
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings
 
+
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 BASE_DIR = Path(__file__).resolve().parent
 

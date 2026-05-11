@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class UserLoginSchema(BaseModel):
-    full_name: str
+    email: EmailStr
     password: str
 
 
@@ -19,9 +19,6 @@ class TokenSchema(BaseModel):
 class RefreshTokenSchema(BaseModel):
 
     refresh_token: str
-
-
-from pydantic import BaseModel
 
 
 class TokenResponse(BaseModel):

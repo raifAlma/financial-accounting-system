@@ -6,6 +6,7 @@ from api.v1 import routers as api_v1
 from container import Container
 from settings import settings
 
+
 container = Container()
 
 

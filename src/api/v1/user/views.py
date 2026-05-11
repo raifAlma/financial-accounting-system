@@ -9,7 +9,7 @@ from infrastructure.repositories.postgres.user.exception import (
     PhoneAlreadyExists,
     UserIsExists,
 )
-from usecases.user.create_user.abstarct import AbstractCreateUserUseCase
+from usecases.user.create_user.abstract import AbstractCreateUserUseCase
 from usecases.user.delete_user.abstract import AbstractDeleteUserUseCase
 from usecases.user.update_user.abstract import AbstractUpdateUserUseCase
 
@@ -19,6 +19,7 @@ from .dependencies import (
     update_user_use_case,
 )
 from .schemas import CreateUserSchema, UpdateUserSchema, UserSchema
+
 
 router = APIRouter(prefix="/user")
 
@@ -43,18 +44,13 @@ async def update_user(
 ):
     try:
         updated_user = await usecase.execute(current_user.id, payload)
-    except EmailAlreadyExists as e:
+    except (
+        EmailAlreadyExists,
+        PhoneAlreadyExists,
+        PassportNumberAlreadyExists,
+        UserIsExists,
+    ) as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-    except PhoneAlreadyExists as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-    except PassportNumberAlreadyExists as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-    except UserIsExists as e:
-        print(f"Unexpected error: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error",
-        )
     return updated_user
 
 

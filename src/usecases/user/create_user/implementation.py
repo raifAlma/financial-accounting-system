@@ -1,6 +1,6 @@
 from api.v1.user.schemas import CreateUserSchema
 
-from .abstarct import AbstractCreateUserUseCase
+from .abstract import AbstractCreateUserUseCase
 
 
 class PostgreSQLCreateUserUseCase(AbstractCreateUserUseCase):

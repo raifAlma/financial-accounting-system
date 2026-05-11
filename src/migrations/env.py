@@ -2,6 +2,7 @@ import asyncio
 import sys
 from pathlib import Path
 
+
 # Добавляем путь к папке src в sys.path
 BASE_DIR = (
     Path(__file__).resolve().parent.parent.parent
@@ -17,7 +18,11 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from infrastructure.database.postgresql.base import Base
+
+# Импорт всех моделей, чтобы они зарегистрировались в Base.metadata
+from infrastructure.database.postgresql.models import *
 from settings import settings
+
 
 print("Tables found:", list(Base.metadata.tables.keys()))
 # this is the Alembic Config object, which provides

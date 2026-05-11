@@ -1,13 +1,13 @@
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, model_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 from api.v1.user.crypto import context
 
 
-class UserLoginSchema(BaseModel):
-    full_name: str
-    password: str
+# class UserLoginSchema(BaseModel):
+#   full_name: str
+#  password: str
 
 
 class UserSchema(BaseModel):
@@ -20,8 +20,15 @@ class CreateUserSchema(BaseModel):
     full_name: str
     email: EmailStr
     password: str
-    phone_number: str
-    passport_number: str
+    phone_number: str = Field(..., min_length=10, max_length=15)
+    passport_number: str = Field(..., min_length=6, max_length=20)
+
+    @field_validator("phone_number", "passport_number")
+    @classmethod
+    def validate_digits_only(cls, v: str) -> str:
+        if not v.isdigit():
+            raise ValueError("Должны быть только цифры")
+        return v
 
     def set_password(self):
         self.password = context.hash(self.password)
