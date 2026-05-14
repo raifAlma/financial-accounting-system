@@ -9,8 +9,9 @@ from infrastructure.repositories.postgres.user import PostgreSQLUserRepository
 from infrastructure.repositories.postgres.user.exception import UserNotFound
 from usecases.token.create_token.abstract import AbstractCreateTokenUseCase
 from usecases.token.refresh_token.abstract import AbstractRefreshTokenUseCase
+from usecases.token.delete_refresh.abstract import AbstractLogoutUseCase
 
-from .dependencies import create_token_use_case, refresh_token_use_case
+from .dependencies import create_token_use_case, refresh_token_use_case, get_logout_use_case
 from .schemas import RefreshTokenSchema, TokenSchema, UserLoginSchema
 
 
@@ -74,3 +75,13 @@ async def create_token(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     # except HTTPException from authorize (неверный пароль) просто пробрасывается
     return token  # FastAPI сам сериализует
+
+from api.v1.auth.schemas import RefreshTokenSchema
+
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+async def logout(
+    payload: RefreshTokenSchema,  # содержит поле refresh_token
+    usecase: AbstractLogoutUseCase = Depends(get_logout_use_case)
+):
+    await usecase.execute(payload.refresh_token)
+    return None

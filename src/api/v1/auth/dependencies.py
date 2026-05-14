@@ -10,6 +10,7 @@ from infrastructure.repositories.postgres.token import (
     PostgreSQLTokenUnitOfWork,
 )
 from usecases.token.create_token.implementation import PostgreSQLCreateTokenUseCase
+from usecases.token.delete_refresh.implementation import PostgreSQLLogoutUseCase
 from usecases.token.refresh_token.implementation import PostgreSQLRefreshTokenUseCase
 
 
@@ -31,6 +32,12 @@ def refresh_token_use_case(
 ):
     uow = get_token_unit_of_work(session)
     return PostgreSQLRefreshTokenUseCase(uow=uow)
+
+def get_logout_use_case(
+        session: AsyncSession = Depends(get_async_session),
+):
+    uow = get_token_unit_of_work(session)
+    return PostgreSQLLogoutUseCase(uow=uow)
 
 
 oauth2_scheme = HTTPBearer()

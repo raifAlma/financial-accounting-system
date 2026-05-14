@@ -25,3 +25,19 @@ class CreateTransactionSchema(BaseModel):
 class TransactionResponseSchema(CreateTransactionSchema):
     id: int
     created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+class ResponseExpencesSchema(CreateTransactionSchema):
+    category_id: int
+    category_name: str
+    total_spent: Decimal
+
+
+class TransactionFilters(BaseModel):
+    from_date: Optional[date] = None
+    to_date: Optional[date] = None
+    category_id: Optional[int] = None
+    limit: int = 50
+    offset: int = 0
+

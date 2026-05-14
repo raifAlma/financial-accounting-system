@@ -3,7 +3,7 @@ import secrets
 from datetime import timedelta
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.v1.auth.schemas import RefreshTokenSchema, TokenSchema
@@ -101,6 +101,13 @@ class PostgreSQLTokenRepository:
         )
         return schema
 
+    async def delete_refresh_token(self, raw_refresh_token: str) -> None:
+        hashed = hash_token(raw_refresh_token)  # хэшируем сырой токен
+        stmt = delete(Token).where(Token.refresh_token == hashed)
+        result = await self._session.execute(stmt)
+        if result.rowcount == 0:
+            raise HTTPException(404, "Refresh token not found")
+
     async def get_user(self, access_token: str) -> UserSchema:
         hex_access_token = hash_token(access_token)
 
@@ -112,14 +119,10 @@ class PostgreSQLTokenRepository:
         result = await self._session.execute(query)
 
         user = result.scalar_one_or_none()
-        print(f"Получен токен из заголовка: {access_token}")
-        print(f"Его хеш: {hex_access_token}")
         # И покажи, что ищем в БД
         result = await self._session.execute(
             select(Token).where(Token.access_token == hex_access_token)
         )
-        print(f"Найден: {result.scalar_one_or_none()}")
-
         if not user:
             raise HTTPException(status_code=401, detail="Invalid access token")
 

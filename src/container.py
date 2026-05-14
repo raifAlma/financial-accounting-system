@@ -9,6 +9,7 @@ from infrastructure.repositories.postgres.transaction.uow import (
     PostgreSQLTransactionUnitOfWork,
 )
 from infrastructure.repositories.postgres.user.uow import PostgreSQLUserUnitOfWork
+from infrastructure.repositories.postgres.budget.uow import PostgreSQLBudgetUnitOfWork
 
 
 class Container(DeclarativeContainer):
@@ -19,3 +20,4 @@ class Container(DeclarativeContainer):
     account_uow_factory = Factory(PostgreSQLAccountUnitOfWork)
     transaction_uow_factory = Factory(PostgreSQLTransactionUnitOfWork)
     category_uow_factory = Factory(PostgreSQLCategoryUnitOfWork)
+    budget_uow_factory = Factory(PostgreSQLBudgetUnitOfWork)

@@ -10,6 +10,7 @@ from infrastructure.repositories.postgres.transaction.uow import (
     PostgreSQLTransactionUnitOfWork,
 )
 from infrastructure.repositories.postgres.user.uow import PostgreSQLUserUnitOfWork
+from infrastructure.repositories.postgres.budget.uow import PostgreSQLBudgetUnitOfWork
 
 
 def build_user_unit_of_work(
@@ -40,3 +41,8 @@ def build_category_unit_of_work(
     session: AsyncSession,
 ) -> PostgreSQLCategoryUnitOfWork:
     return Container.category_uow_factory(session=session)
+
+def build_budget_unit_of_work(
+        session: AsyncSession,
+) -> PostgreSQLBudgetUnitOfWork:
+    return Container.budget_uow_factory(session=session)

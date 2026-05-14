@@ -1,8 +1,11 @@
+from decimal import Decimal
+from typing import List
+
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.v1.account.schemas import AccountUpdateSchema, CreateAccountSchema
+from api.v1.account.schemas import AccountUpdateSchema, CreateAccountSchema, AccountResponseSchema
 from infrastructure.database.postgresql.models import Account
 
 
@@ -21,6 +24,24 @@ class PostgreSQLAccountRepository:
         self.session.add(account)
         await self.session.flush()
         return account
+
+    async def get(self, user_id: int, account_id: int) -> Account:
+        stmt = select(Account).where(
+            Account.id == account_id, Account.user_id == user_id
+        )
+        result = await self.session.execute(stmt)
+        account = result.scalar_one_or_none()
+        if not account:
+            raise HTTPException(404, "Account not found")
+        return account
+
+    async def get_list(self, user_id: int) -> list[Account]:
+        stmt = select(Account).where(
+            Account.user_id == user_id
+        )
+        result = await self.session.execute(stmt)
+        accounts = result.scalars().all()
+        return accounts
 
     async def update(
         self, user_id: int, account_id, payload: AccountUpdateSchema
@@ -42,6 +63,13 @@ class PostgreSQLAccountRepository:
         await self.session.flush()
         await self.session.refresh(account)
         return account
+
+    async def get_balance(self, user_id: int) -> list[tuple[str, Decimal]]:
+        stmt = select(Account.currency, func.sum(Account.balance).label("total")) \
+            .where(Account.user_id == user_id) \
+            .group_by(Account.currency)
+        result = await self.session.execute(stmt)
+        return result.all()  
 
     async def delete(self, user_id: int, account_id: int) -> None:
         stmt = select(Account).where(
