@@ -56,5 +56,5 @@ async def delete_category(
         current_user: User = Depends(get_current_user),
         usecase: AbstractDeleteCategoryUseCase = Depends(delete_category_use_case)
 ):
-    category = await usecase.execute(current_user.id, category_id)
+    await usecase.execute(current_user.id, category_id)
     return None

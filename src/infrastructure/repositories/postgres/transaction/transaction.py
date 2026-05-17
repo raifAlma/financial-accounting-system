@@ -1,10 +1,9 @@
-from datetime import datetime, timedelta
+
 from decimal import Decimal
 
 from fastapi import HTTPException
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from api.v1.transaction.schemas import CreateTransactionSchema, TransactionFilters
 from infrastructure.database.postgresql.models import Account, Category, Transaction, Budget
@@ -129,33 +128,4 @@ class PostgreSQlTransactionRepository:
             raise HTTPException(status_code=404, detail="Transaction not found")
         return transaction
 
-    async def get_expenses(self, user_id: int, month: str) -> list[tuple[int, str, Decimal]]:
-        # Преобразуем "2025-05" в первый день месяца и последний
-        year, month_num = map(int, month.split('-'))
-        start_date = datetime(year, month_num, 1).date()
-        # Последний день: берём первый день следующего месяца и вычитаем 1 день
-        if month_num == 12:
-            next_month = datetime(year + 1, 1, 1).date()
-        else:
-            next_month = datetime(year, month_num + 1, 1).date()
-        end_date = next_month - timedelta(days=1)
-
-        stmt = (
-            select(
-                Category.id,
-                Category.name,
-                func.sum(Transaction.amount).label('total_spent')
-            )
-            .join(Transaction, Transaction.category_id == Category.id)
-            .where(
-                Category.user_id == user_id,
-                Transaction.transaction_date >= start_date,
-                Transaction.transaction_date <= end_date,
-                Transaction.amount < 0
-            )
-            .group_by(Category.id, Category.name)
-        )
-        result = await self.session.execute(stmt)
-        rows = result.all()
-        return rows
 

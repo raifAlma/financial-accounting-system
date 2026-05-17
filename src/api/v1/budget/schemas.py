@@ -13,7 +13,7 @@ class CreateBudgetSchema(BaseModel):
     category_id: int
     month: str = Field(..., pattern=r"^\d{4}-\d{2}$", description="YYYY-MM")
     planned_amount: float = Field(..., gt=0)
-    currency: Currency = Field(default="RUB", max_length=3)
+    currency: Currency = Field(default="USD", max_length=3)
 
 
 

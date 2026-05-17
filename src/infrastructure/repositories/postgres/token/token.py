@@ -48,8 +48,6 @@ class PostgreSQLTokenRepository:
             access_token_expires_in=access_token_expires_in,
             refresh_token_expires_in=refresh_token_expires_in,
         )
-        print(f"Создан access_token (сырой): {access_token}")
-        print(f"Его хеш: {hex_access_token}")
         return schema
 
     async def delete(self, token: Token) -> None:

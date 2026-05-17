@@ -63,6 +63,6 @@ async def get_transaction(
 async def get_expenses(
         current_user: User = Depends(get_current_user),
         usecase: AbstractGetExpensesUseCase = Depends(get_expenses_use_case),
-        month: str = Query(..., description="YYYY-MM"),
+        month: str = Query(..., description="xYYYY-MM"),
 ):
     return await usecase.execute(current_user.id, month)

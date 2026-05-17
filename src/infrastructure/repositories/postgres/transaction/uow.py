@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from infrastructure.repositories.postgres.category import PostgreSQLCategoryRepository
 from infrastructure.repositories.postgres.transaction import (
     PostgreSQlTransactionRepository,
 )
@@ -10,6 +11,7 @@ class PostgreSQLTransactionUnitOfWork:
         self._session: AsyncSession = session
 
         self.repository: PostgreSQlTransactionRepository | None = None
+        self.category_repository = PostgreSQLCategoryRepository(session)
 
     async def __aenter__(self):
         self.repository = PostgreSQlTransactionRepository(self._session)

@@ -1,6 +1,5 @@
 import enum
 
-from pycparser.c_ast import Enum
 from sqlalchemy import Column, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

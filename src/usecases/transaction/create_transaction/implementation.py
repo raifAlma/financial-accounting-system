@@ -14,7 +14,7 @@ class PostgreSQLCreateTransactionUseCase(AbstractCreateTransactionUseCase):
         TransactionResponseSchema, str | None]:
         async with self._uow as uow:
             # 1. Получить категорию (через репозиторий категорий, доступный в UoW)
-            category = await uow.category_repository.get_by_id(schema.category_id)
+            category = await uow.category_repository.get(user_id, schema.category_id)
             if not category or category.user_id != user_id:
                 raise HTTPException(404, "Category not found")
 
